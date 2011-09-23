@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.1 2011/09/23 22:17:27 anoop Exp $
+# $Id: Makefile,v 1.2 2011/09/23 22:23:56 anoop Exp $
 #
 # @Copyright@
 # 
@@ -55,6 +55,9 @@
 # @Copyright@
 #
 # $Log: Makefile,v $
+# Revision 1.2  2011/09/23 22:23:56  anoop
+# Use /opt/rocks as prefix instead of /usr
+#
 # Revision 1.1  2011/09/23 22:17:27  anoop
 # Renamed thumper-conf roll as ZFS storage roll
 # and included in the mainline rocks tree
@@ -75,7 +78,7 @@
 # socat (updated netcat).
 #
 
-PKGROOT		= /usr
+PKGROOT		= /opt/rocks
 REDHAT.ROOT     = $(CURDIR)/../../
 
 -include $(ROCKSROOT)/etc/Rules.mk
