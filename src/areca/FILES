@@ -1,0 +1,9 @@
+#For 1680 Areca Controller
+#Firmware:	
+http://www.areca.us/support/download/RaidCards/BIOS_Firmware/ARC1680.zip
+Driver
+#ftp://ftp.areca.com.tw/RaidCards/AP_Drivers/Solaris/DRIVER/1.20.00.18-20100127.zip
+#CLI
+ftp://ftp.areca.com.tw/RaidCards/AP_Drivers/Solaris/CLI/v1.83_091103.zip
+#HTTP
+ftp://ftp.areca.com.tw/RaidCards/AP_Drivers/Solaris/HTTP/v1.84_091103.zip

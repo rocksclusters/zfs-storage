@@ -1,0 +1,48 @@
+#! /bin/sh
+
+# smartmontools init file for smartd
+# Copyright (C) 2002-8 Bruce Allen <smartmontools-support@lists.sourceforge.net>
+# $Id: smartd,v 1.1 2011/09/23 22:17:26 anoop Exp $
+
+
+. /lib/svc/share/smf_include.sh
+SMARTD_BIN=/opt/smartmontools/sbin/smartd
+
+# Source configuration file.  This should define the shell variable smartd_opts.
+# Email smartmontools-support@lists.sourceforge.net if there is a better choice
+# of path for Solaris
+[ -r /etc/default/smartmontools ] && . /etc/default/smartmontools
+
+PID_FILE=/var/run/smartd.pid
+RETVAL=0
+
+case "$1" in
+	start)
+	    echo "Starting smartd"
+	    $SMARTD_BIN -p $PID_FILE $smartd_opts
+      	    RETVAL=$?
+	    ;;
+	stop)
+	    echo "Stopping smartd"
+	    [ -f $PID_FILE ] && kill `cat $PID_FILE`
+      	    RETVAL=$?
+	    ;;
+	restart)
+	    $0 stop
+	    sleep 1
+	    $0 start
+      	    RETVAL=$?
+	    ;;
+	reload)
+	    kill -s HUP `cat $PID_FILE`
+      	    RETVAL=$?
+	    ;;
+	report)
+	    kill -s USR1 `cat $PID_FILE`
+      	    RETVAL=$?
+	    ;;
+	*)
+	    echo "Usage: $0 {start|stop|restart|reload|report}"
+	    exit 1
+esac
+exit $RETVAL

@@ -1,0 +1,68 @@
+<?xml version="1.0" standalone="no"?>
+
+<jumpstart>
+
+
+	<description>
+	</description>
+
+	<copyright>
+	Copyright (c) 2000 - 2008 The Regents of the University of California.
+	All rights reserved. Rocks(r) v5.3 www.rocksclusters.org
+	</copyright>
+
+	<changelog>
+	
+	</changelog>
+
+<package os="sunos">ROCKSareca-support</package>
+<package os="sunos">SUNWarcmsr</package>
+
+<post os="sunos">
+<!-- Add targets to sd.conf so that drives show up --> 
+
+<file mode="append" name="/kernel/drv/sd.conf"> 
+#http://unix.derkeiler.com/Mailing-Lists/SunManagers/2009-02/msg00061.html
+# Areca controller Ch01 - Ch08
+name="sd" class="scsi" target=0 lun=0;
+name="sd" class="scsi" target=0 lun=1;
+name="sd" class="scsi" target=0 lun=2;
+name="sd" class="scsi" target=0 lun=3;
+name="sd" class="scsi" target=0 lun=4;
+name="sd" class="scsi" target=0 lun=5;
+name="sd" class="scsi" target=0 lun=6;
+name="sd" class="scsi" target=0 lun=7;
+
+# Areca controller Ch09 - Ch16
+name="sd" class="scsi" target=1 lun=0;
+name="sd" class="scsi" target=1 lun=1;
+name="sd" class="scsi" target=1 lun=2;
+name="sd" class="scsi" target=1 lun=3;
+name="sd" class="scsi" target=1 lun=4;
+name="sd" class="scsi" target=1 lun=5;
+name="sd" class="scsi" target=1 lun=6;
+name="sd" class="scsi" target=1 lun=7;
+
+# Areca controller Ch17 - Ch24
+name="sd" class="scsi" target=2 lun=0;
+name="sd" class="scsi" target=2 lun=1;
+name="sd" class="scsi" target=2 lun=2;
+name="sd" class="scsi" target=2 lun=3;
+name="sd" class="scsi" target=2 lun=4;
+name="sd" class="scsi" target=2 lun=5;
+name="sd" class="scsi" target=2 lun=6;
+name="sd" class="scsi" target=2 lun=7;
+
+# Areca controller Ch25 - Ch32
+name="sd" class="scsi" target=3 lun=0;
+name="sd" class="scsi" target=3 lun=1;
+name="sd" class="scsi" target=3 lun=2;
+name="sd" class="scsi" target=3 lun=3;
+name="sd" class="scsi" target=3 lun=4;
+name="sd" class="scsi" target=3 lun=5;
+name="sd" class="scsi" target=3 lun=6;
+name="sd" class="scsi" target=3 lun=7;
+</file>
+</post>
+
+</jumpstart>

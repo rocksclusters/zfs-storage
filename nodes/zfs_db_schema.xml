@@ -1,0 +1,81 @@
+<?xml version="1.0" standalone="no"?>
+
+<kickstart>
+
+
+	<description>
+	</description>
+
+	<copyright>
+	Copyright (c) 2000 - 2008 The Regents of the University of California.
+	All rights reserved. Rocks(r) v5.0 www.rocksclusters.org
+	</copyright>
+
+	<changelog>
+	$Log: zfs_db_schema.xml,v $
+	Revision 1.1  2011/09/23 22:17:28  anoop
+	Renamed thumper-conf roll as ZFS storage roll
+	and included in the mainline rocks tree
+	
+	Revision 1.5  2009/08/19 02:28:39  anoop
+	Major changes to the replication database infrastructure
+	- Allow connection to replication server as user specified username
+	- Allow for user specified crontab strings. This is now possible as
+	  the cron script is user specific and not attached to root. This means
+	  that the script can be generated every single time from scratch
+	- Allow for storage of public keys of replication clients, so as to
+	  automatically create authorized_keys files for the respective users
+	
+	Revision 1.4  2009/05/20 05:58:45  anoop
+	Fixed database schema
+	
+	</changelog>
+
+<post>
+<file name="/tmp/thumper-db-schema.sql">
+<!--
+  This table is specific to a replication client
+  -->
+DROP TABLE IF EXISTS zfs_replication;
+CREATE TABLE zfs_replication (
+id		int(11)		NOT NULL AUTO_INCREMENT PRIMARY KEY,
+local_host	int(11)		NOT NULL REFERENCES nodes(id),
+local_fs	varchar(128)	NOT NULL,
+remote_host	varchar(128)	NOT NULL,
+remote_fs	varchar(128)	NOT NULL,
+remote_user	varchar(128)	NOT NULL DEFAULT 'zfsuser',
+maxBackup	int(11)		NOT NULL DEFAULT '100'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+<!--
+  Moved frequency out of the zfs_replication table into
+  its own table.
+-->	
+DROP TABLE IF EXISTS zfs_rep_frequency;
+CREATE TABLE zfs_rep_frequency(
+id		int(11)		NOT NULL AUTO_INCREMENT PRIMARY KEY,
+zfs_id		int(11)		NOT NULL REFERENCES zfs_replication(id),
+frequency	enum('daily','weekly','monthly', 'user_specified') NOT NULL DEFAULT 'daily',
+cron_string	varchar(128)	NOT NULL DEFAULT '02 4 * * *'
+) ENGINE=MyISAM;
+
+<!--
+  This table is specific to a replication server.
+  This table maintains keys for the replication
+  server. The keys that go here are put into the
+  authorised_keys file.
+  -->
+DROP TABLE IF EXISTS zfs_keys;
+CREATE TABLE zfs_keys ( 
+id		int(11)		NOT NULL AUTO_INCREMENT PRIMARY KEY,
+host 		int(11)		NOT NULL REFERENCES nodes(id),
+user		varchar(128)	NOT NULL DEFAULT 'zfsuser',
+public_key	text(2048)	NOT NULL,
+fingerprint	varchar(256)	NOT NULL
+) engine=MyISAM;
+</file>
+
+/opt/rocks/bin/mysql --user=root --password='' cluster &lt; /tmp/thumper-db-schema.sql
+</post>
+
+</kickstart>

@@ -1,0 +1,22 @@
+<!--
+$Id: installing.sgml,v 1.1 2011/09/23 22:17:26 anoop Exp $
+
+$Log: installing.sgml,v $
+Revision 1.1  2011/09/23 22:17:26  anoop
+Renamed thumper-conf roll as ZFS storage roll
+and included in the mainline rocks tree
+
+Revision 1.1  2009/04/16 18:28:01  cpapadop
+Copied from Ganglia then added logging for all new
+addtions for thumper-conf roll
+
+-->
+
+<chapter id="installing" xreflabel="Installing">
+
+
+<title>Installing</title>
+
+&source_roll-installing-standard;
+
+</chapter>

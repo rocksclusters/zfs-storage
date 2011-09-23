@@ -1,0 +1,135 @@
+<?xml version="1.0" standalone="no"?>
+
+<kickstart>
+
+
+	<description>
+	Installs and configures the backup scripts
+	for the client nodes
+	</description>
+
+	<copyright>
+	Copyright (c) 2000 - 2008 The Regents of the University of California.
+	All rights reserved. Rocks(r) v5.0 www.rocksclusters.org
+	</copyright>
+
+	<changelog>
+	$Log: zfs_client.xml,v $
+	Revision 1.1  2011/09/23 22:17:28  anoop
+	Renamed thumper-conf roll as ZFS storage roll
+	and included in the mainline rocks tree
+	
+	Revision 1.14  2010/09/01 21:18:28  anoop
+	SSH keys cannot be setup during post, because PRNG is not setup.
+	Move ssh key generation to first boot
+	
+	Revision 1.13  2010/09/01 18:07:02  anoop
+	syslog.conf does not like spaces, prefers tabs instead
+	
+	Revision 1.12  2010/08/30 18:42:13  anoop
+	Spit and Polish.
+	
+	Revision 1.11  2010/07/20 19:31:30  phil
+	Add iscsi target packages.
+	Modify /etc/syslog.conf to be conforming with what Sun Support requires when running explorer.
+	
+	Revision 1.10  2010/04/13 19:28:03  phil
+	Up the number of NFS server threads
+	
+	Revision 1.9  2009/11/14 00:34:29  phil
+	Add smartmontools to ZFS file servers
+	
+	Revision 1.8  2009/10/20 23:21:54  phil
+	Added the Samba packages on solaris.
+	Copy the example smb.conf file.
+	
+	Revision 1.7  2009/08/19 02:23:32  anoop
+	Don't create zfs keys for zfsuser on the frontend.
+	Each nas appliance is going to get its own ssh key pair
+	
+	Revision 1.6  2009/06/27 00:57:13  anoop
+	Actually add socat to the compute nodes
+	
+	Revision 1.5  2009/06/17 18:52:18  anoop
+	zfsuser keys setup correctly
+	
+	Revision 1.4  2009/05/22 06:49:00  anoop
+	Moved permissions script out of xml file, which was
+	causing XML errors during jumpstart generation.
+	
+	Revision 1.3  2009/04/30 22:36:24  abrust
+	added shell script to set zfs permissions
+	
+	Revision 1.2  2009/04/21 00:45:58  anoop
+	Added the zfsuser user
+	
+	Revision 1.1  2008/10/17 17:06:59  anoop
+	Clean-up of node and graph XML files
+	
+	</changelog>
+
+<package os="sunos">ROCKSzfs-backup</package>
+<package os="sunos">ROCKSsocat</package>
+<package os="sunos">ROCKSsmartmontools</package>
+<package os="sunos">SUNWsmbac</package>
+<package os="sunos">SUNWsmbar</package>
+<package os="sunos">SUNWsmbaS</package>
+<package os="sunos">SUNWsmbau</package>
+<package os="sunos">SUNWiscsitgtr</package>
+<package os="sunos">SUNWiscsitgtu</package>
+
+<post os="sunos">
+
+<!-- Create the ZFSUSER home directory -->
+mkdir -p /opt/rocks/thumper
+mkdir -p /opt/rocks/thumper/share
+useradd -u 419 -d /opt/rocks/thumper/zfsuser \
+	-m -s /bin/bash -g sys zfsuser
+
+<!-- Create ssh keys for zfsuser -->
+<file name="/opt/rocks/thumper/share/zfs-key-setup.sh" perms='0755'>#!/bin/sh
+case "$1" in
+
+	"-c")
+		mkdir -p /opt/rocks/thumper/zfsuser/.ssh;
+		ssh-keygen -f /opt/rocks/thumper/zfsuser/.ssh/id_dsa \
+			-t dsa -q -N '';
+		chmod -R 0700 /opt/rocks/thumper/zfsuser/.ssh;
+		chown -R zfsuser:sys /opt/rocks/thumper/zfsuser;
+		;;
+esac
+</file>
+sysidconfig -a /opt/rocks/thumper/share/zfs-key-setup.sh
+
+
+<!-- Create zfs-backup log directory -->
+mkdir -p /var/log/zfs-backup
+chown -R zfsuser:sys /var/log/zfs-backup
+chmod -R 0755 /var/log/zfs-backup
+
+<!-- up the number of NFS Threads -->
+/bin/sed -e 's/^NFSD_SERVERS=[0-9]*/NFSD_SERVERS=512/' /etc/default/nfs &gt; /tmp/nfs
+cp /tmp/nfs /etc/default/nfs
+<file name="/etc/default/nfs"/>
+
+<!-- Copy the example smb.conf file -->
+cp /etc/sfw/smb.conf-example /etc/sfw/smb.conf
+<file name="/etc/sfw/smb.conf"/>
+
+<file name="/etc/syslog.conf" mode="append">
+*.err		/var/adm/messages
+kern.debug	/var/log/kern
+daemon.notice	/var/adm/messages
+*.info		/var/adm/messages
+</file>
+
+<!-- Setup Smartmontools -->
+<!-- Create dummy smartmontools config file -->
+<file name="/etc/defaults/smartmontools" />
+<!-- Enable smartd through svcadm -->
+cp /opt/smartmontools/share/smartd.xml /var/svc/manifest/system/smartd.xml
+<service name='system/smartd' enabled='yes'/>
+
+</post>
+
+</kickstart>

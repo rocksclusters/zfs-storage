@@ -1,0 +1,180 @@
+<!--
+$Id: using.sgml,v 1.1 2011/09/23 22:17:26 anoop Exp $
+
+$Log: using.sgml,v $
+Revision 1.1  2011/09/23 22:17:26  anoop
+Renamed thumper-conf roll as ZFS storage roll
+and included in the mainline rocks tree
+
+Revision 1.7  2009/06/17 19:05:03  clem
+
+added the documetation of the command line
+
+Revision 1.5  2009/04/24 18:52:20  clem
+First alpha version of the doc
+
+Revision 1.4  2009/04/24 03:29:22  clem
+more modifications...
+
+Revision 1.3  2009/04/24 03:18:43  clem
+First version of the documentation
+
+Revision 1.2  2009/04/16 19:01:39  cpapadop
+Copied from Ganglia then added logging for all new
+addtions for thumper-conf roll.  Made into simple
+template to start documentation.
+
+Revision 1.1  2009/04/16 18:35:25  cpapadop
+Copied from Ganglia then added logging for all new
+addtions for thumper-conf roll.  Started with config-thumper
+sgml file include.  This is just a starting point.
+
+-->
+
+<chapter id="using" xreflabel="Using the Thumper-conf Roll">
+
+
+<title>The Thumper Replica Roll</title>
+
+<para>
+The main component of the Thumper Replica Roll is the /opt/rocks/sbin/zfs-backup Perl script (<xref linkend="replica-script">).
+This script is installed only on Solaris 10+ machine since it needs ZFS to run.
+When executed it creates a snapshot of a ZFS file system on the replica host where it is executed 
+(called source replica host from now on), and then it sends a copy of this snapshot to a second 
+host (destination replicat host).
+</para>
+
+<para>
+This roll provides also a set of <filename>rocks</filename> commands which can be used to to create the approriate 
+crontab entries to invoke the zfs-backup perl script (<xref linkend="rocks-commands">).
+</para>
+
+
+
+<section id="replica-script" xreflabel="The replica script">
+  <title>The replica script</title>
+  <para>Before being able to run this script the user has to:</para>
+  <orderedlist>
+    <listitem><para>
+      Generate an ssh key-pair for host to host connectivity, 
+      basically the source replica host has to be able to ssh to the destination replica host
+    </para></listitem>
+    <listitem><para>
+      On the destination replica host a zfs file system has to be created with the naming convention explained below
+      in order to be able to receive the snapshot from the source replica host.
+    </para></listitem> 
+  </orderedlist>
+      
+  <para>The zfs filesystem that will contain the remote snapshot on the destination replica 
+  host will have the following naming convention.</para>
+
+  <screen>&lt;destinationFSName&gt;/&lt;source replica hostname&gt;/&lt;source replica host file system name&gt;</screen>
+  <para>For example if the host name of the source replica host is thumper-0-3 and the filesystem to be backed up is:</para>
+  <screen>export/bigdata</screen>
+  <para>and the the user wants to replicate the data on the file system called </para>
+  <screen>zfspool/replicabackup</screen>
+  <para>the user has to create a file system on the destination replica host with the following name:</para>
+  <screen>zfspool/replicabackup/thumper-0-3/export/bigdata</screen>
+  <para>and the snapshot will be called:</para>
+  <screen>zfspool/replicabackup/thumper-0-3/export/bigdata@SNAPSHOT2009-04-08-1239214741
+zfspool/replicabackup/thumper-0-3/export/bigdata@SNAPSHOT2009-04-08-1239214747
+zfspool/replicabackup/thumper-0-3/export/bigdata@SNAPSHOT2009-04-08-1239214778
+  </screen>
+
+
+  <section id="replica-script-cmd" xreflabel="The replica script command line">
+    <title>The replica script command line</title>
+    <para>The command line syntax is:</para>
+    <screen>
+      Usage: ./zfs-backup.pl [args]
+	Options: -z &lt;zfs filesystem to be replicatedi&gt;
+	         -k &lt;/path/to/ssh/key&gt; this paramters is optional
+	         -r &lt;FQDN of replicant host&gt;
+	         -f remote ZFS filesystem to hold the backup data. If not present default is export/backups/
+	         -h Display help
+
+	-z -r are the only required parameters, the others have a default value.
+
+	Example: ./zfs-backup.pl -z export/foo -k /root/key -r z.com -i zfspool1 
+
+	The remote zfs filesytem path must point to the first level of the remote zfs where the user
+	wants to place the data. No starting trailing slash. With the previous example data will be
+	placed on /zfspool1/backup/&lt;hostname&gt;/export/foo@SNAPSHOT2009-04-08-1239214747
+
+    </screen>
+    
+    <para>Below there are extra infomation on some flags:</para>
+     <orderedlist>
+     <listitem><para>
+    -z specifies the local zfs file system to be backed up (this is the zfs file system and not the 
+    path!).
+     </para></listitem>
+     <listitem><para>
+    -r is the hostname that will be used to ssh to the remote replica host (before running the zfs-backup
+    try ssh &lt;hostname&gt; to verify your configuration!).
+     </para></listitem>
+     <listitem><para>
+    -f is the remote file system as explained above (note that also this is a zfs file system and not 
+    the path!).
+     </para></listitem>
+     </orderedlist>
+
+    <para>The option -z -r, are mandatory. If the -k is not specified the default location is used. 
+    The script keeps a set of log files in <filename>/var/log/zfs-backup</filename>, if you are having 
+    problems look at the log files.</para>
+
+
+  </section>
+
+</section>
+
+
+<section id="rocks-commands" xreflabel="The rocks commands">
+  <title>The rocks commands</title>
+  <para>Included with the Thumper Replica Roll there is also a set of rocks command. These commands should be used to create 
+    modify and delete crontab entry that will invoke the replica script on the various Solaris 10 hosts. To see a detailed 
+    description of the command line refer to Chapter 4.
+  </para>
+  <orderedlist>
+    <listitem><para>
+    <filename>rocks add host replica</filename> - this command should be used to create a new replica crontab entry
+    </para></listitem>
+    <listitem><para>
+    <filename>rocks list host replica</filename> - this command list all the configured replica entry
+    </para></listitem>
+    <listitem><para>
+    <filename>rocks remove host replica</filename> - this command remove should be used to remove a replica entry
+    </para></listitem>
+    <listitem><para>
+    <filename>rocks report host replica</filename> - this command should be used to create the crontab entry for 
+      a specified host, for more details see below. 
+    </para></listitem>
+
+  </orderedlist>
+  <para>
+    The steps necessary create a crontab entry to replicate a ZFS file system are:
+
+  <orderedlist>
+    <listitem><para>
+        Create one or more entries using the <filename>rocks add host replica</filename> 
+        command
+    </para></listitem>
+    <listitem><para>
+        Make sure that the <filename>zfs-backup</filename> script works properly as indicated 
+        in section <xref linkend="replica-script"> 
+    </para></listitem>
+    <listitem><para>
+        Use <filename>rocks report host replica</filename> command to propagate the contab on the 
+        source replica host as indicated below.
+    </para></listitem>
+  </orderedlist>
+
+    <screen>
+rocks report host replica &lt;source replica hostname&gt; | rocks report script | ssh &lt;source replica hostname&gt;
+    </screen>
+
+  </para>
+</section>
+
+
+</chapter>

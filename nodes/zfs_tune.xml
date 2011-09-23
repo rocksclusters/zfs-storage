@@ -1,0 +1,24 @@
+<?xml version="1.0" standalone="no"?>
+
+<jumpstart>
+
+
+	<description>
+	</description>
+
+	<copyright>
+	Copyright (c) 2000 - 2008 The Regents of the University of California.
+	All rights reserved. Rocks(r) v5.0 www.rocksclusters.org
+	</copyright>
+
+	<changelog>
+	
+	</changelog>
+
+<post>
+<file mode="append" name="/etc/system">
+set zfs:zil_disable=1
+</file>
+</post>
+
+</jumpstart>

@@ -1,0 +1,37 @@
+<!--
+$Id: copyrights.sgml,v 1.1 2011/09/23 22:17:26 anoop Exp $
+
+$Log: copyrights.sgml,v $
+Revision 1.1  2011/09/23 22:17:26  anoop
+Renamed thumper-conf roll as ZFS storage roll
+and included in the mainline rocks tree
+
+Revision 1.2  2009/04/16 18:09:44  cpapadop
+Copied from Ganglia then added logging for all new
+addtions for thumper-conf roll
+
+-->
+
+<chapter id="copyrights" xreflabel="Copyrights">
+
+
+<title>Copyrights</title>
+
+<section id="thumper-conf-copyright" xreflabel="thumper-conf">
+<title>Your title here</title>
+
+<para>
+This product includes software developed ...
+</para>
+
+<para>
+The software contained in this distribution is released under the academic
+license agreement which requires to acknowledge the use of the software 
+that results in any published work. 
+</para>
+
+
+</section>
+
+
+</chapter>

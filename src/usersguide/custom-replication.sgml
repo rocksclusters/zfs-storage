@@ -1,0 +1,24 @@
+<!--
+$Id: custom-replication.sgml,v 1.1 2011/09/23 22:17:26 anoop Exp $
+
+$Log: custom-replication.sgml,v $
+Revision 1.1  2011/09/23 22:17:26  anoop
+Renamed thumper-conf roll as ZFS storage roll
+and included in the mainline rocks tree
+
+Revision 1.1  2009/04/16 19:01:39  cpapadop
+Copied from Ganglia then added logging for all new
+addtions for thumper-conf roll.  Made into simple
+template to start documentation.
+
+-->
+
+<section id="customization-replication" xreflabel="Customizing Replication">
+	<title> Customizing Replication </title>
+
+
+<para>
+Customizing replication
+</para>
+
+</section>

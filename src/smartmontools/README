@@ -1,0 +1,61 @@
+Downloaded from:
+http://sourceforge.net/projects/smartmontools/files/
+
+Writeup on setting up smartmontools on Solaris
+http://cafenate.wordpress.com/2009/02/22/setting-up-smartmontools-on-opensolaris/
+
+
+How to run smartd at bootup -- 
+
+So far so good, but what about having smartd run at bootup, and continuously monitoring the disk status? In Linux, you use initd, but since this is OpenSolaris, we'll use the Service Management Framework (SMF) instead. 
+To do that, paste the following text into /var/svc/manifest/site/smartd.xml, 
+change the file ownership to root:sys, and invoke 
+svccfg -v import /var/svc/manifest/site/smartd.xml. 
+Then check that the service is running (svcs smartd), and if not, 
+enable it using pfexec svcadm enable smartd.
+
+(Modified by PMP to reflect the pathname for Rocks-created path of /opt/smartmontools)
+<?xml version="1.0"?>
+<!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
+<service_bundle type="manifest" name="smartd">
+  <service
+     name="site/smartd"
+     type="service"
+     version="1">
+    <single_instance/>
+    <dependency
+       name="filesystem-local"
+       grouping="require_all"
+       restart_on="none"
+       type="service">
+      <service_fmri value="svc:/system/filesystem/local:default"/>
+    </dependency>
+    <exec_method
+       type="method"
+       name="start"
+       exec="/opt/smartmontools/etc/rc.d/init.d/smartd start"
+       timeout_seconds="60">
+      <method_context>
+        <method_credential user="root" group="root"/>
+      </method_context>
+    </exec_method>
+    <exec_method
+       type="method"
+       name="stop"
+       exec="/opt/smartmontools/etc/rc.d/init.d/smartd stop"
+       timeout_seconds="60">
+    </exec_method>
+    <instance name="default" enabled="true"/>
+    <stability value="Unstable"/>
+    <template>
+      <common_name>
+        <loctext xml:lang="C">
+          SMART monitoring service (smartd)
+        </loctext>
+      </common_name>
+      <documentation>
+        <manpage title="smartd" section="1M" manpath="/opt/smartmontools/share/man"/>
+      </documentation>
+    </template>
+  </service>
+</service_bundle>

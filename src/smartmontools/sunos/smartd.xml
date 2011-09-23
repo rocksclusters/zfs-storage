@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
+
+<service_bundle type='manifest' name='ROCKSsmartmontools:smartd'>
+
+<service 
+	name='system/smartd'
+	type='service'
+	version='1'>
+
+	<single_instance />
+
+	<dependency name='fs-local'
+		grouping='require_all'
+		restart_on='none'
+		type='service'>
+		<service_fmri
+			value='svc:/system/filesystem/local' />
+	</dependency>
+
+	<dependency name='config_data'
+		grouping='require_all'
+		restart_on='restart'
+		type='path'>
+		<service_fmri value='file://localhost/opt/smartmontools/etc/smartd.conf' />
+	</dependency>
+
+	<exec_method
+		type='method'
+		name='start'
+		exec='/lib/svc/method/smartd start'
+		timeout_seconds='60'/>
+
+	<exec_method
+		type='method'
+		name='stop'
+		exec='/lib/svc/method/smartd stop'
+		timeout_seconds='60' />
+
+	<exec_method
+		type='method'
+		name='refresh'
+		exec='/lib/svc/method/smartd restart'
+		timeout_seconds='60' />
+	
+	<property_group name='startd'
+		type='framework'>
+		<propval name='ignore_error'
+		    type='astring' value='core,signal' />
+	</property_group>
+
+        <property_group name='general' type='framework'>
+                <propval name='action_authorization' type='astring'
+                        value='solaris.smf.manage.smartd' />
+        </property_group>
+
+	<instance name="default" enabled="true"/>
+
+	<stability value="Unstable"/>
+
+	<template>
+		<common_name>
+			<loctext xml:lang="C">
+			SMART monitoring service (smartd)
+			</loctext>
+		</common_name>
+		<documentation>
+			<manpage title="smartd" section="1M"
+			manpath="/opt/smartmontools/share/man"/>
+		</documentation>
+	</template>
+
+</service>
+
+</service_bundle>
+

@@ -1,0 +1,54 @@
+<?xml version="1.0" standalone="no"?>
+
+<kickstart>
+
+
+	<description>
+	Installs and configures the linux
+	frontend to set up thumper replication
+	correctly
+	</description>
+
+	<copyright>
+	Copyright (c) 2000 - 2008 The Regents of the University of California.
+	All rights reserved. Rocks(r) v5.0 www.rocksclusters.org
+	</copyright>
+
+	<changelog>
+	$Log: zfs_server.xml,v $
+	Revision 1.1  2011/09/23 22:17:28  anoop
+	Renamed thumper-conf roll as ZFS storage roll
+	and included in the mainline rocks tree
+	
+	Revision 1.5  2010/04/01 21:40:33  phil
+	Add support for areca 1680 controller used in Aberdeen systems.
+	
+	Revision 1.4  2009/10/15 20:39:49  anoop
+	Added zfsuser to frontend because there needs to be an entry for zfsuser
+	in the /etc/shadow file, which then gets distributed to compute nodes over
+	411.
+	
+	Revision 1.3  2009/08/19 02:23:32  anoop
+	Don't create zfs keys for zfsuser on the frontend.
+	Each nas appliance is going to get its own ssh key pair
+	
+	Revision 1.2  2009/04/21 00:45:58  anoop
+	Added the zfsuser user
+	
+	Revision 1.1  2008/10/17 17:06:59  anoop
+	Clean-up of node and graph XML files
+	
+	</changelog>
+
+<package os="linux">thumper-command</package>
+
+<post os="linux">
+/usr/sbin/useradd -u 419 -d /opt/rocks/thumper/zfsuser \
+	-M -s /sbin/nologin -g sys zfsuser
+<!-- Enable Areca controller for nas appliances only if necessary -->
+<!-- 
+/opt/rocks/bin/rocks add appliance attr nas areca true
+-->
+</post>
+
+</kickstart>
