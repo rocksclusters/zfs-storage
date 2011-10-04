@@ -1,4 +1,4 @@
-#!/opt/rocks/bin/perl -w
+#!/usr/bin/perl -w
 #
 # TODO
 # - create semaphore locking for script.
