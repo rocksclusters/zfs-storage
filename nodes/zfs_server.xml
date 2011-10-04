@@ -16,6 +16,10 @@
 
 	<changelog>
 	$Log: zfs_server.xml,v $
+	Revision 1.2  2011/10/04 23:20:27  anoop
+	thumper-command is now rocks-zfs-commands
+	packaging error fixed
+	
 	Revision 1.1  2011/09/23 22:17:28  anoop
 	Renamed thumper-conf roll as ZFS storage roll
 	and included in the mainline rocks tree
@@ -40,7 +44,7 @@
 	
 	</changelog>
 
-<package os="linux">thumper-command</package>
+<package os="linux">rocks-zfs-command</package>
 
 <post os="linux">
 /usr/sbin/useradd -u 419 -d /opt/rocks/thumper/zfsuser \
