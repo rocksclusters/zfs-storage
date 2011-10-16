@@ -1,9 +1,13 @@
-# $Id: __init__.py,v 1.1 2011/09/23 22:17:27 anoop Exp $
+# $Id: __init__.py,v 1.2 2011/10/16 07:03:27 anoop Exp $
 
 # @Copyright@
 # @Copyright@
 
 # $Log: __init__.py,v $
+# Revision 1.2  2011/10/16 07:03:27  anoop
+# Attempt to connect to replication server to setup zfs-permissions correctly.
+# This will only work if the replication server is part of our cluster
+#
 # Revision 1.1  2011/09/23 22:17:27  anoop
 # Renamed thumper-conf roll as ZFS storage roll
 # and included in the mainline rocks tree
@@ -24,9 +28,10 @@
 #
 
 import rocks.commands
-from subprocess import Popen, PIPE
 import os
 import sys
+from rocks.commands.sync.host import Parallel
+from rocks.commands.sync.host import timeout
 
 class Command(rocks.commands.sync.host.command, rocks.commands.HostArgumentProcessor):
 	"""
@@ -35,6 +40,11 @@ class Command(rocks.commands.sync.host.command, rocks.commands.HostArgumentProce
 	cluster.
 	"""
 	def run(self, params, args):
+		# lambda function to return first element in a tuple.
+		# ("hostname", ) is the tuple that the sql statement
+		# returns, and we want just "hostname"
+		f = lambda(x): x[0]
+
 		if len(args) > 0:
 			hosts = self.getHostnames(args)
 		else:
@@ -42,7 +52,27 @@ class Command(rocks.commands.sync.host.command, rocks.commands.HostArgumentProce
 				'from zfs_replication, nodes where '	+\
 				'zfs_replication.local_host=nodes.id')
 			hosts = self.db.fetchall()
-			f = lambda(x): x[0]
 			hosts = map(f, hosts)
 		for host in hosts:
 			self.runPlugins(host)
+
+
+		# Select all the replication servers, and try to set permissions
+		# on their backup filesystems. Do this only for hosts that are under
+		# our control. Since we cannot run the list of remote hosts
+		# through the getHostnames function, we have to try and login
+		# to every host without a password, and hope they connect.
+		self.db.execute('select remote_host, remote_fs from ' +\
+			'zfs_replication group by remote_host, remote_fs')
+		rows = self.db.fetchall()
+		cmd_line = '/opt/rocks/thumper/zfs-perms-setup.sh'
+		ssh_cmd = 'ssh -xT -o NumberOfPasswordPrompts=0'
+		threads = []
+		for (host, fs) in rows:
+			cmd = '%s %s "%s %s"' % (ssh_cmd, host, cmd_line, fs)
+			p = Parallel(cmd, host)
+			threads.append(p)
+			p.start()
+		
+		for thread in threads:
+			thread.join(timeout)
