@@ -1,9 +1,12 @@
-# $Id: __init__.py,v 1.1 2011/09/23 22:17:27 anoop Exp $
+# $Id: __init__.py,v 1.2 2011/10/16 07:03:27 anoop Exp $
 #
 # @Copyright@
 # @Copyright@
 #
 # $Log: __init__.py,v $
+# Revision 1.2  2011/10/16 07:03:27  anoop
+# Modify the way cron values are checked.
+#
 # Revision 1.1  2011/09/23 22:17:27  anoop
 # Renamed thumper-conf roll as ZFS storage roll
 # and included in the mainline rocks tree
@@ -69,6 +72,7 @@ import stat
 import time
 import sys
 import string
+import re
 import rocks.commands
 from subprocess import Popen, PIPE
 
@@ -216,19 +220,34 @@ class Command(rocks.commands.HostArgumentProcessor, rocks.commands.add.command):
 						'user=%s' % remote_user])
 
 	def check_cron_string(self, freq):
-		if len(freq.split()) != 5:
+		cron_string = freq.split()
+		# Check to make sure minimum number of cron elements
+		# are present.
+		if len(cron_string) != 5:
 			return False
-		(m, h, D, M, d) = freq.split()
-		if not (m == '*' or (0 <= int(m) <= 59)):
-			return False
-		if not (h == '*' or (0 <= int(h) <= 23)):
-			return False
-		if not (D == '*' or (0 < int(D) <= 31)):
-			return False
-		if not (M == '*' or (0 < int(M) <= 12)):
-			return False
-		if not (d == '*' or (0 <= int(d) <= 7)):
-			return False
+		
+		# Define cron limits in order (m, h, D, M, d)
+		cron_limit = [
+			(0,59), # Minutes
+			(0,23), # Hours
+			(1,31), # Day Of Month
+			(1,12), # Month
+			(1,7),  # Day of Week
+			]
+		# This regexp catches *, */2, */3, etc.
+		re_m = re.compile("^\*(\/[0-9]+)*$")
+
+		# This regexp catches integers >= 0
+		re_c = re.compile("^[0-9]+(,[0-9]+)*$")
+		for i in range(5):
+			if(re_m.match(cron_string[i]) == None):
+				if (re_c.match(cron_string[i]) == None):
+					return False
+				if (int(cron_string[i])) > (cron_limit[i][1]):
+					return False
+				if (int(cron_string[i])) < (cron_limit[i][0]):
+					return False
+			
 		return True
 
 	def get_ssh_key(self, host):
