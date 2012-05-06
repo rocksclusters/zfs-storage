@@ -1,13 +1,14 @@
 #
-# $Id: Makefile,v 1.1 2011/09/23 22:17:26 anoop Exp $
+# $Id: Makefile,v 1.2 2012/05/06 05:49:54 phil Exp $
 #
 # @Copyright@
 # 
-# 				Rocks(tm)
+# 				Rocks(r)
 # 		         www.rocksclusters.org
-# 		        version 4.3 (Mars Hill)
+# 		         version 5.5 (Mamba)
+# 		         version 6.0 (Mamba)
 # 
-# Copyright (c) 2000 - 2007 The Regents of the University of California.
+# Copyright (c) 2000 - 2012 The Regents of the University of California.
 # All rights reserved.	
 # 
 # Redistribution and use in source and binary forms, with or without
@@ -25,7 +26,7 @@
 # 3. All advertising and press materials, printed or electronic, mentioning
 # features or use of this software must display the following acknowledgement: 
 # 
-# 	"This product includes software developed by the Rocks(tm)
+# 	"This product includes software developed by the Rocks(r)
 # 	Cluster Group at the San Diego Supercomputer Center at the
 # 	University of California, San Diego and its contributors."
 # 
@@ -55,6 +56,9 @@
 # @Copyright@
 #
 # $Log: Makefile,v $
+# Revision 1.2  2012/05/06 05:49:54  phil
+# Copyright Storm for Mamba
+#
 # Revision 1.1  2011/09/23 22:17:26  anoop
 # Renamed thumper-conf roll as ZFS storage roll
 # and included in the mainline rocks tree

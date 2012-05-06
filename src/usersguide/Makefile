@@ -3,9 +3,10 @@
 # 
 # 				Rocks(r)
 # 		         www.rocksclusters.org
-# 		           version 5.1  (VI)
+# 		         version 5.5 (Mamba)
+# 		         version 6.0 (Mamba)
 # 
-# Copyright (c) 2000 - 2008 The Regents of the University of California.
+# Copyright (c) 2000 - 2012 The Regents of the University of California.
 # All rights reserved.	
 # 
 # Redistribution and use in source and binary forms, with or without
@@ -53,6 +54,9 @@
 # @Copyright@
 #
 # $Log: Makefile,v $
+# Revision 1.2  2012/05/06 05:49:54  phil
+# Copyright Storm for Mamba
+#
 # Revision 1.1  2011/09/23 22:17:26  anoop
 # Renamed thumper-conf roll as ZFS storage roll
 # and included in the mainline rocks tree
