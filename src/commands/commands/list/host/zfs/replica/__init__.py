@@ -1,13 +1,13 @@
-# $Id: __init__.py,v 1.2 2012/05/06 05:49:54 phil Exp $
+# $Id: __init__.py,v 1.3 2012/11/27 00:49:43 phil Exp $
 # 
 # @Copyright@
 # 
 # 				Rocks(r)
 # 		         www.rocksclusters.org
-# 		         version 5.5 (Mamba)
-# 		         version 6.0 (Mamba)
+# 		         version 5.6 (Emerald Boa)
+# 		         version 6.1 (Emerald Boa)
 # 
-# Copyright (c) 2000 - 2012 The Regents of the University of California.
+# Copyright (c) 2000 - 2013 The Regents of the University of California.
 # All rights reserved.	
 # 
 # Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 #
 # Changes
 # $Log: __init__.py,v $
+# Revision 1.3  2012/11/27 00:49:43  phil
+# Copyright Storm for Emerald Boa
+#
 # Revision 1.2  2012/05/06 05:49:54  phil
 # Copyright Storm for Mamba
 #
@@ -87,6 +90,9 @@
 #
 # Revision 1.2  2008/09/17 21:02:55  clem
 # there was a typo in the log cvs keyword ($Log: __init__.py,v $
+# there was a typo in the log cvs keyword (Revision 1.3  2012/11/27 00:49:43  phil
+# there was a typo in the log cvs keyword (Copyright Storm for Emerald Boa
+# there was a typo in the log cvs keyword (
 # there was a typo in the log cvs keyword (Revision 1.2  2012/05/06 05:49:54  phil
 # there was a typo in the log cvs keyword (Copyright Storm for Mamba
 # there was a typo in the log cvs keyword (
