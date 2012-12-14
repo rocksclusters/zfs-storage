@@ -16,6 +16,9 @@
 
 	<changelog>
 	$Log: zfs_client.xml,v $
+	Revision 1.4  2012/12/14 06:10:44  phil
+	changes to support zfs on linux. revert replication user to root until delegation and extended acls works
+	
 	Revision 1.3  2012/05/06 05:49:53  phil
 	Copyright Storm for Mamba
 	
@@ -85,7 +88,11 @@
 <package os="sunos">SUNWiscsitgtr</package>
 <package os="sunos">SUNWiscsitgtu</package>
 
-<post os="sunos">
+<package os="linux">zfs-backup</package>
+<package os="linux">socat</package>
+
+<!-- Common Post Section: Linux/Solaris -->
+<post>
 
 <!-- Create the ZFSUSER home directory -->
 mkdir -p /opt/rocks/thumper
@@ -107,7 +114,6 @@ case "$1" in
 		;;
 esac
 </file>
-sysidconfig -a /opt/rocks/thumper/share/zfs-key-setup.sh
 
 
 <!-- Create zfs-backup log directory -->
@@ -115,6 +121,15 @@ mkdir -p /var/log/zfs-backup
 chown -R zfsuser:sys /var/log/zfs-backup
 chmod -R 0755 /var/log/zfs-backup
 
+</post>
+
+<!-- Linux-Specific Post Section -->
+<post os="linux">
+/opt/rocks/thumper/share/zfs-key-setup.sh
+</post>
+
+<!-- Solaris-Specific Post Section -->
+<post os="sunos">
 <!-- up the number of NFS Threads -->
 /bin/sed -e 's/^NFSD_SERVERS=[0-9]*/NFSD_SERVERS=512/' /etc/default/nfs &gt; /tmp/nfs
 cp /tmp/nfs /etc/default/nfs
@@ -138,6 +153,7 @@ daemon.notice	/var/adm/messages
 cp /opt/smartmontools/share/smartd.xml /var/svc/manifest/system/smartd.xml
 <service name='system/smartd' enabled='yes'/>
 
+sysidconfig -a /opt/rocks/thumper/share/zfs-key-setup.sh
 </post>
 
 </kickstart>

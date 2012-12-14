@@ -1,4 +1,4 @@
-# $Id: __init__.py,v 1.3 2012/11/27 00:49:43 phil Exp $
+# $Id: __init__.py,v 1.4 2012/12/14 06:10:44 phil Exp $
 # 
 # @Copyright@
 # 
@@ -55,6 +55,9 @@
 # @Copyright@
 #
 # $Log: __init__.py,v $
+# Revision 1.4  2012/12/14 06:10:44  phil
+# changes to support zfs on linux. revert replication user to root until delegation and extended acls works
+#
 # Revision 1.3  2012/11/27 00:49:43  phil
 # Copyright Storm for Emerald Boa
 #
@@ -133,7 +136,7 @@ class Command(rocks.commands.report.host.command):
 	def run(self, params, args):
 		#change this path accorndingly
 		replicaScriptPath = '/opt/rocks/sbin/zfs-backup'
-		crontab		= '/var/spool/cron/crontabs/zfsuser'
+		crontab		= '/var/spool/cron/root'
 
 		local_fs	=	None
 		local_host	=	None
@@ -165,7 +168,9 @@ class Command(rocks.commands.report.host.command):
 			return
 
 		self.beginOutput()
-		self.addText('<file name="%s" perms="0600" owner="root:sys">\n' % (crontab))
+		self.addText('/bin/sed -i "/## ZFS/d" %s \n' % (crontab))
+		self.addText('/bin/sed -i "/zfs-backup/d" %s \n' % (crontab))
+		self.addText('<file name="%s" perms="0600" owner="root:sys" mode="append">\n' % (crontab))
 		self.addText('## ZFS Replication ##\n')
 		for (local_fs, remote_user, remote_host, remote_fs, \
 			maxBackup, cron_string) in self.db.fetchall():

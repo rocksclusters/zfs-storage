@@ -16,7 +16,7 @@
 	
 	</changelog>
 
-<post>
+<post os="sunos">
 <file mode="append" name="/etc/system">
 set zfs:zil_disable=1
 </file>

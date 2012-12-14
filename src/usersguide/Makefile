@@ -54,6 +54,9 @@
 # @Copyright@
 #
 # $Log: Makefile,v $
+# Revision 1.4  2012/12/14 06:10:45  phil
+# changes to support zfs on linux. revert replication user to root until delegation and extended acls works
+#
 # Revision 1.3  2012/11/27 00:49:45  phil
 # Copyright Storm for Emerald Boa
 #
@@ -77,7 +80,7 @@ REDHAT.ROOT = $(CURDIR)/../../
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
 
-default: $(NAME).spec 
+default: $(NAME).spec
 
 html: predoc
 	jw --backend html --dsl $(CURDIR)/rocks.dsl#html index.sgml

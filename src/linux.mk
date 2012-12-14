@@ -1,1 +1,1 @@
-SRCDIRS	=	commands socat
+SRCDIRS	=	commands socat zfs_backup usersguide

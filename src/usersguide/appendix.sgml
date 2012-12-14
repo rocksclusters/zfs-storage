@@ -1,6 +1,6 @@
 <!--
 
-$Id: appendix.sgml,v 1.1 2011/09/23 22:17:26 anoop Exp $
+$Id: appendix.sgml,v 1.2 2012/12/14 06:10:45 phil Exp $
 
 Appendix for Copyright and License notices
 
@@ -8,6 +8,9 @@ Appendix for Copyright and License notices
 @Copyright@
 
 $Log: appendix.sgml,v $
+Revision 1.2  2012/12/14 06:10:45  phil
+changes to support zfs on linux. revert replication user to root until delegation and extended acls works
+
 Revision 1.1  2011/09/23 22:17:26  anoop
 Renamed thumper-conf roll as ZFS storage roll
 and included in the mainline rocks tree
@@ -23,7 +26,7 @@ addtions for thumper-conf roll
 
 -->
 
-&source_faq;
+&source-faq;
 
 <appendix id="rocks-copyright" xreflabel="Appendix: Rocks Copyright">
 	<title>Rocks Copyright</title>

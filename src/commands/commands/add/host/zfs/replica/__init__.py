@@ -1,4 +1,4 @@
-# $Id: __init__.py,v 1.4 2012/11/27 00:49:43 phil Exp $
+# $Id: __init__.py,v 1.5 2012/12/14 06:10:44 phil Exp $
 #
 # @Copyright@
 # 
@@ -55,6 +55,9 @@
 # @Copyright@
 #
 # $Log: __init__.py,v $
+# Revision 1.5  2012/12/14 06:10:44  phil
+# changes to support zfs on linux. revert replication user to root until delegation and extended acls works
+#
 # Revision 1.4  2012/11/27 00:49:43  phil
 # Copyright Storm for Emerald Boa
 #
@@ -165,7 +168,7 @@ class Command(rocks.commands.HostArgumentProcessor, rocks.commands.add.command):
 	Remote user. This is the username for logging in
 	to the remote host. This is to be supplied by the
 	system administrator of the remote host. This parameter
-	is optional and defaults to 'zfsuser'
+	is optional and defaults to 'root'
 	</param>
 
 	<param type='string' name='frequency' optional='1'>
@@ -214,7 +217,7 @@ class Command(rocks.commands.HostArgumentProcessor, rocks.commands.add.command):
 			remote_fs = ''
 
 		if not remote_user:
-			remote_user='zfsuser'
+			remote_user='root'
 			
 		if not frequency:
 			frequency = 'daily'
@@ -267,14 +270,17 @@ class Command(rocks.commands.HostArgumentProcessor, rocks.commands.add.command):
 		self.db.execute(sql_cmd)
 
 		# Get the ssh public key of the zfs replication client
-		ssh_key = self.get_ssh_key(local_host)
-		if ssh_key is None:
-			self.abort("Could not get ssh public key for %s\n" % local_host +\
-				"Add public key manually using 'rocks add host zfs key'\n" +\
-				"and sync keys using 'rocks sync host zfs key'")
-		self.command('add.host.zfs.key',[remote_host, 
-						'key=%s' % ssh_key,
-						'user=%s' % remote_user])
+		# XXX: look at this when ZFS on Linux supports extended ACLs
+		#      replication currently done as root
+		if 0 == 1:
+			ssh_key = self.get_ssh_key(local_host)
+			if ssh_key is None:
+				self.abort("Could not get ssh public key for %s\n" % local_host +\
+					"Add public key manually using 'rocks add host zfs key'\n" +\
+					"and sync keys using 'rocks sync host zfs key'")
+			self.command('add.host.zfs.key',[remote_host, 
+							'key=%s' % ssh_key,
+							'user=%s' % remote_user])
 
 	def check_cron_string(self, freq):
 		cron_string = freq.split()

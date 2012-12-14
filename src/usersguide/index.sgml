@@ -1,10 +1,13 @@
 <!--
-$Id: index.sgml,v 1.1 2011/09/23 22:17:26 anoop Exp $
+$Id: index.sgml,v 1.2 2012/12/14 06:10:45 phil Exp $
 
 @Copyright@
 @Copyright@
 
 $Log: index.sgml,v $
+Revision 1.2  2012/12/14 06:10:45  phil
+changes to support zfs on linux. revert replication user to root until delegation and extended acls works
+
 Revision 1.1  2011/09/23 22:17:26  anoop
 Renamed thumper-conf roll as ZFS storage roll
 and included in the mainline rocks tree
@@ -45,11 +48,11 @@ addtions for thumper-conf roll
 	</subtitle>
 
 	
-        <edition>Version &document_version;</edition>
-        <pubdate>&document_pubdate;</pubdate>
+        <edition>Version &document-version;</edition>
+        <pubdate>&document-pubdate;</pubdate>
         <copyright id="copyright" xreflabel="copyright">
-                <year>&document_year;</year>
-                <holder>&document_copyright;</holder>   
+                <year>&document-year;</year>
+                <holder>&document-copyright;</holder>   
         </copyright>
 
         <releaseinfo>
@@ -65,11 +68,11 @@ addtions for thumper-conf roll
 
 </bookinfo>
 
-&source_preface;
-&source_roll-overview;
-&source_installing;
-&source_using;
-&source_roll-commands;
+&source-preface;
+&source-roll-overview;
+&source-installing;
+&source-using;
+&source-roll-commands;
 <!-- &source_customizing; -->
-&source_appendix;
+&source-appendix;
 </book>
